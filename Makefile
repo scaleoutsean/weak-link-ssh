@@ -1,6 +1,8 @@
-IMAGE ?= weak-link-ssh:ubuntu16.04
-GHCR_IMAGE ?= ghcr.io/${GHCR_OWNER:-your-org}/weak-link-ssh:ubuntu16.04
-DOCKERHUB_IMAGE ?= ${DOCKERHUB_USER:-youruser}/weak-link-ssh:ubuntu16.04
+IMAGE ?= weak-link-ssh:latest
+# GHCR_OWNER ?= 
+DOCKERHUB_USER ?= scaleoutsean
+GHCR_IMAGE ?= ghcr.io/${GHCR_OWNER:-your-org}/weak-link-ssh:latest
+DOCKERHUB_IMAGE ?= ${DOCKERHUB_USER:-youruser}/weak-link-ssh:latest
 
 .PHONY: build tag-ghcr push-ghcr push-dockerhub publish clean
 

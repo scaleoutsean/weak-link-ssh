@@ -1,8 +1,13 @@
-# Weak Link SSH (Ubuntu 16.04)
+# Weak Link SSH
 
 A small Docker image based on **Ubuntu 16.04** that provides an older OpenSSH client and a convenience wrapper (`ssh-legacy`) pre-configured to allow legacy key-exchange, ciphers and MACs used by old network appliances.
 
-Why: modern Linux distributions have removed or disabled weak SSH algorithms — this image lets you safely run a legacy client in an isolated container for maintenance of end-of-life devices.
+Feature highlights:
+
+- Security as weak as required to connect
+- Very convenient
+
+Why: modern OS have removed or disabled weak SSH algorithms. This image lets you safely run a legacy client in an isolated container for maintenance of end-of-life devices.
 
 ## What this image provides
 
@@ -19,8 +24,10 @@ Enabled (example) algorithms in the wrapper:
 ## Quick start — build
 
 ```sh
+# pull GHCR container image
+
 # build locally
-docker build -t weak-link-ssh:ubuntu16.04 .
+docker build -t weak-link-ssh:latest .
 ```
 
 ## Run examples
@@ -30,13 +37,13 @@ docker build -t weak-link-ssh:ubuntu16.04 .
 ```sh
 docker run --rm -it \
   -v "$HOME/.ssh:/root/.ssh:ro" \
-  weak-link-ssh:ubuntu16.04 ssh-legacy user@LEGACY_HOST
+  weak-link-ssh:latest ssh-legacy user@LEGACY_HOST
 ```
 
 2) Start an interactive shell and run commands manually:
 
 ```sh
-docker run --rm -it -v "$HOME/.ssh:/root/.ssh:ro" weak-link-ssh:ubuntu16.04
+docker run --rm -it -v "$HOME/.ssh:/root/.ssh:ro" weak-link-ssh:latest
 # then inside container: ssh-legacy user@legacy-host
 ```
 
@@ -44,7 +51,7 @@ docker run --rm -it -v "$HOME/.ssh:/root/.ssh:ro" weak-link-ssh:ubuntu16.04
 
 ```sh
 docker run --rm -it -v "$HOME/.ssh:/root/.ssh:ro" \
-  weak-link-ssh:ubuntu16.04 \
+  weak-link-ssh:latest \
   ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 user@legacy-host
 ```
 
@@ -54,7 +61,7 @@ The `ssh-report` command queries a server's SSH KEX/host-key/cipher/MAC capabili
 
 ```sh
 # run a quick capability report
-docker run --rm -it weak-link-ssh:ubuntu16.04 ssh-report legacy-host.example.com:22
+docker run --rm -it weak-link-ssh:latest ssh-report legacy-host.example.com:22
 ```
 
 Sample output lists server KEX algorithms, host-key types, ciphers and MACs so you can pick only the required weak items.
@@ -84,7 +91,7 @@ Save as `mydevice` in a directory and mount that directory when running the cont
 docker run --rm -it \
   -v "$PWD/profiles:/profiles:ro" \
   -v "$HOME/.ssh:/root/.ssh:ro" \
-  weak-link-ssh:ubuntu16.04 \
+  weak-link-ssh:latest \
   ssh-profile mydevice
 ```
 
@@ -115,23 +122,13 @@ sudo cp completions/ssh-profile.bash /etc/bash_completion.d/ssh-profile
 # restart your shell or `source /etc/bash_completion` to load it
 ```
 
-## CI / publishing (Makefile + GitHub Actions)
-
-A `Makefile` and GitHub Actions workflow are included to build and publish the image.
-
-- Build locally: `make build`
-- Publish to GHCR: `make push-ghcr` (set `GHCR_OWNER` env or edit the `Makefile`)
-- Optional: publish to Docker Hub with `make push-dockerhub` (set `DOCKERHUB_USER`)
-
-The workflow `.github/workflows/publish.yml` builds and pushes to `ghcr.io/${{ github.repository_owner }}/weak-link-ssh:ubuntu16.04` on `main` or when you push a tag; it will also push to Docker Hub when `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` are provided as repository secrets.
-
 ## Example debug
 
 If you see debug lines mentioning `diffie-hellman-group1-sha1`, `hmac-md5`, or `aes128-cbc`, the legacy wrapper can help negotiate those algorithms when necessary.
 
 ## Security
 
-If security is not weak enough, let me know in Issues and we'll consider downgrading it further.
+If the security is not weak enough, let me know in Issues and we'll consider downgrading it further.
 
 This project intentionally enables deprecated algorithms for device compatibility; treat it as a maintenance tool only.
 
