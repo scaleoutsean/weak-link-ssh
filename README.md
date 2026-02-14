@@ -6,6 +6,7 @@ Feature highlights:
 
 - Security as weak as required to connect
 - Very convenient
+- SSH to servers on your own terms
 
 Why: modern OS have removed or disabled weak SSH algorithms. This image lets you safely run a legacy client in an isolated container for maintenance of end-of-life devices.
 
@@ -32,11 +33,20 @@ docker build -t weak-link-ssh:latest .
 
 ## Run examples
 
-1) Use your local SSH keys (recommended):
+These assume self-built container image. If you've downloaded from registry, tag the container or modify image name when using these examples.
+
+1) Use your SSH keys (with correct permissions):
+
+**Note:** Mounting your $HOME/.ssh directly can cause errors like `Bad owner or permissions on /root/.ssh/config` because SSH is strict about file permissions and ownership. To avoid this, copy your SSH config and keys to a temporary directory and set the correct permissions before mounting:
 
 ```sh
+mkdir -p ~/.ssh_weak_link
+cp -a $HOME/.ssh/* ~/.ssh_weak_link
+chmod 700 ~/.ssh_weak_link
+chmod 600 ~/.ssh_weak_link/*
+# (Optional) Remove files you don't want to share, e.g. rm /tmp/ssh-tmp/known_hosts
 docker run --rm -it \
-  -v "$HOME/.ssh:/root/.ssh:ro" \
+  -v "~/.ssh_weak_link:/root/.ssh:ro" \
   weak-link-ssh:latest ssh-legacy user@LEGACY_HOST
 ```
 
@@ -106,10 +116,13 @@ If `HostFingerprint` is set in the profile (or passed to `ssh-legacy` via `--hos
 
 This image intentionally enables insecure algorithms. Use it only for short-term maintenance in isolated/trusted networks. Do NOT use it for general-purpose SSH access.
 
+
 ## Troubleshooting
 
+- **SSH config permissions error:**
+  - If you see `Bad owner or permissions on /root/.ssh/config`, it means the SSH config or key files are not owned by root or have overly permissive permissions. This often happens when mounting your $HOME/.ssh directly. Use the workaround above to copy files to a temp directory and set permissions.
 - If the modern client shows "no matching key exchange method" or "no matching cipher" — try `ssh-legacy` from this container.
-- Mount your SSH keys with `-v "$HOME/.ssh:/root/.ssh:ro"` so the container can reuse them.
+- Mount your SSH keys with the correct permissions as shown above so the container can reuse them.
 
 ## Shell completion
 
