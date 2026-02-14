@@ -24,9 +24,9 @@ Enabled (example) algorithms in the wrapper:
 ## Quick start — build
 
 ```sh
-# pull GHCR container image
-
-# build locally
+# pull container image
+docker pull docker.io/scaleoutsean/weak-link-ssh:latest
+# or build locally
 docker build -t weak-link-ssh:latest .
 ```
 
