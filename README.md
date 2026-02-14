@@ -26,7 +26,7 @@ Enabled (example) algorithms in the wrapper:
 
 ```sh
 # pull container image
-docker pull scaleoutsean/weak-link-ssh:latest
+docker pull docker.io/scaleoutsean/weak-link-ssh:latest
 # or build locally
 docker build -t weak-link-ssh:latest .
 ```
