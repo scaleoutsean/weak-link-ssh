@@ -35,18 +35,34 @@ docker build -t weak-link-ssh:latest .
 
 These assume self-built container image. If you've downloaded from registry, tag the container or modify image name when using these examples.
 
-1) Use your SSH keys (with correct permissions):
+
+1) Generate a legacy-compatible SSH key (inside the container):
+
+Modern systems often cannot create keys weak enough for legacy servers (e.g., DSA or 1024-bit RSA). Use the container's legacy ssh-keygen to generate a compatible key:
+
+```sh
+docker run --rm -it -v "$PWD:/mnt" weak-link-ssh:latest bash
+# Inside the container, generate a weak key (e.g., DSA or 1024-bit RSA):
+ssh-keygen -t dsa -f /mnt/legacy_id_dsa
+# or for weak RSA:
+ssh-keygen -t rsa -b 1024 -f /mnt/legacy_id_rsa
+exit
+```
+
+This will create legacy_id_dsa (or legacy_id_rsa) and its .pub file in your current directory on the host. Add the public key to your legacy server's authorized_keys as usual.
+
+2) Use your legacy SSH key (with correct permissions):
 
 **Note:** Mounting your $HOME/.ssh directly can cause errors like `Bad owner or permissions on /root/.ssh/config` because SSH is strict about file permissions and ownership. To avoid this, copy your SSH config and keys to a temporary directory and set the correct permissions before mounting:
 
 ```sh
 mkdir -p ~/.ssh_weak_link
-cp -a $HOME/.ssh/* ~/.ssh_weak_link
+cp legacy_id_dsa* ~/.ssh_weak_link/   # or legacy_id_rsa*
+# Optionally copy config or known_hosts if needed
 chmod 700 ~/.ssh_weak_link
 chmod 600 ~/.ssh_weak_link/*
-# (Optional) Remove files you don't want to share, e.g. rm /tmp/ssh-tmp/known_hosts
 docker run --rm -it \
-  -v "~/.ssh_weak_link:/root/.ssh:ro" \
+  -v "$HOME/.ssh_weak_link:/root/.ssh:ro" \
   weak-link-ssh:latest ssh-legacy user@LEGACY_HOST
 ```
 
