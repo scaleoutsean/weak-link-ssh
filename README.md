@@ -66,14 +66,14 @@ docker run --rm -it \
   weak-link-ssh:latest ssh-legacy user@LEGACY_HOST
 ```
 
-2) Start an interactive shell and run commands manually:
+3) Start an interactive shell and run commands manually:
 
 ```sh
 docker run --rm -it -v "$HOME/.ssh:/root/.ssh:ro" weak-link-ssh:latest
 # then inside container: ssh-legacy user@legacy-host
 ```
 
-3) Use plain `ssh` with ad-hoc options (if you prefer):
+4) Use plain `ssh` with ad-hoc options (if you prefer):
 
 ```sh
 docker run --rm -it -v "$HOME/.ssh:/root/.ssh:ro" \
