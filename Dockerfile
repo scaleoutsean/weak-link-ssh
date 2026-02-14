@@ -1,6 +1,8 @@
 FROM docker.io/library/ubuntu@sha256:1f1a2d56de1d604801a9671f301190704c25d604a416f59e03c04f5c6ffee0d6
 # Ubuntu 16.04 (docker pull ubuntu:16.04)
 
+LABEL org.opencontainers.image.source="https://github.com/scaleoutsean/weak-link-ssh"
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 # small image with OpenSSH client (legacy-friendly) and common utilities
