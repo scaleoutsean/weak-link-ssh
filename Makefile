@@ -1,8 +1,6 @@
 IMAGE ?= weak-link-ssh:latest
-# GHCR_OWNER ?= 
-DOCKERHUB_USER ?= scaleoutsean
-GHCR_IMAGE ?= ghcr.io/${GHCR_OWNER:-your-org}/weak-link-ssh:latest
-DOCKERHUB_IMAGE ?= ${DOCKERHUB_USER:-youruser}/weak-link-ssh:latest
+GHCR_OWNER = scaleoutsean
+GHCR_IMAGE ?= ghcr.io/${GHCR_OWNER}/weak-link-ssh:latest
 
 .PHONY: build tag-ghcr push-ghcr push-dockerhub publish clean
 
@@ -17,13 +15,8 @@ push-ghcr: build
 	@docker tag $(IMAGE) $(GHCR_IMAGE)
 	@docker push $(GHCR_IMAGE)
 
-push-dockerhub: build
-	@echo "Pushing to Docker Hub: $(DOCKERHUB_IMAGE)"
-	@docker tag $(IMAGE) $(DOCKERHUB_IMAGE)
-	@docker push $(DOCKERHUB_IMAGE)
-
 publish: push-ghcr
-	@echo "Done. Run 'make push-dockerhub' if you also want to push to Docker Hub."
+	@echo "Done."
 
 clean:
 	docker rmi -f $(IMAGE) || true
