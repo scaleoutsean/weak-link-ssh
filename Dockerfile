@@ -2,6 +2,9 @@ FROM docker.io/library/ubuntu@sha256:1f1a2d56de1d604801a9671f301190704c25d604a41
 # Ubuntu 16.04 (docker pull ubuntu:16.04)
 
 LABEL org.opencontainers.image.source="https://github.com/scaleoutsean/weak-link-ssh"
+LABEL org.opencontainers.image.description="A small image with OpenSSH client and helpers to connect to legacy/weak SSH servers (e.g. old network appliances). Provides ssh-legacy wrapper to enable legacy algorithms and optional host fingerprint verification, and ssh-profile for per-device config profiles."
+LABEL org.opencontainers.image.licenses="Apache-2.0"
+LABEL org.opencontainers.image.url="https://github.com/scaleoutsean/weak-link-ssh"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
