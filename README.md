@@ -13,7 +13,7 @@ Why: modern OS have removed or disabled weak SSH algorithms. This image lets you
 ## What this image provides
 
 - Ubuntu 16.04 base with `openssh-client` installed
-- `/usr/local/bin/ssh-legacy` — wrapper that enables legacy algorithms
+- `/usr/local/bin/ssh-legacy` - CLI wrapper that enables legacy algorithms
 - Optional system-wide legacy config at `/etc/ssh/ssh_config.d/legacy.conf` (kept separate; wrapper is opt-in)
 
 Enabled (example) algorithms in the wrapper:
@@ -22,7 +22,7 @@ Enabled (example) algorithms in the wrapper:
 - Ciphers: aes128-cbc, 3des-cbc
 - MACs: hmac-md5, hmac-sha1
 
-## Quick start — build
+## Quick start - build or pull
 
 ```sh
 # pull container image
@@ -123,16 +123,6 @@ docker run --rm -it \
 
 If `HostFingerprint` is set in the profile (or passed to `ssh-legacy` via `--host-fp`), the client will verify the fingerprint using `ssh-keyscan` before connecting — this prevents naive MITM when you already trust the server's key.
 
-## When to use
-
-- You cannot upgrade or modify the legacy device
-- You need a reproducible, isolated environment that still supports old SSH algorithms
-
-## Security warning
-
-This image intentionally enables insecure algorithms. Use it only for short-term maintenance in isolated/trusted networks. Do NOT use it for general-purpose SSH access.
-
-
 ## Troubleshooting
 
 - **SSH config permissions error:**
@@ -157,9 +147,12 @@ If you see debug lines mentioning `diffie-hellman-group1-sha1`, `hmac-md5`, or `
 
 ## Security
 
-If the security is not weak enough, let me know in Issues and we'll consider downgrading it further.
+This image intentionally enables insecure algorithms. Use it only for short-term maintenance in isolated/trusted networks. Do NOT use it for general-purpose SSH access. Use cases:
 
-This project intentionally enables deprecated algorithms for device compatibility; treat it as a maintenance tool only.
+- You cannot upgrade or modify the legacy device
+- You need a reproducible, isolated environment that still supports old SSH algorithms
+
+If the security is not weak enough, let me know in Issues and we'll consider downgrading it further.
 
 ## License / Notes
 
