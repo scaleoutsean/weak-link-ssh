@@ -18,7 +18,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ vars.DOCKERHUB_USERNAME }}/my-image
+          images: ${{ vars.DOCKERHUB_USERNAME }}/weak-link-ssh
+          tags: "latest,${{ github.sha }}"
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
